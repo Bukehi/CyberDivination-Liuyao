@@ -1,9 +1,9 @@
-from models import najiadz
-from models import najiatg
-from models import variable
-from models import shiying
-from models import liuqin
-from models.dict import Gua
+from liuyao_models import najiadz
+from liuyao_models import najiatg
+from liuyao_models import variable
+from liuyao_models import shiying
+from liuyao_models import liuqin
+from liuyao_models.dict import Gua
 import random
 import os
 import datetime
@@ -12,7 +12,8 @@ import cnlunar
 Gua = Gua()
 
 
-class Divination:
+class LiuYao:
+    # 六爻
     def __init__(self):
         self.cntime = ""
         self.empty = ""
@@ -102,9 +103,11 @@ class Divination:
             int(Gua.NumToEightGua[str(self.vyao_6) + str(self.vyao_5) + str(self.vyao_4)]), 1)
         ### 纳甲天干###
         self.HS_num1 = najiatg.najiatg(
-            int(Gua.NumToEightGua[str(self.yao_3[0]) + str(self.yao_2[0]) + str(self.yao_1[0])]), 0)  # 内卦天干
+            # 内卦天干
+            int(Gua.NumToEightGua[str(self.yao_3[0]) + str(self.yao_2[0]) + str(self.yao_1[0])]), 0)
         self.HS_num2 = najiatg.najiatg(
-            int(Gua.NumToEightGua[str(self.yao_6[0]) + str(self.yao_5[0]) + str(self.yao_4[0])]), 1)  # 外卦天干
+            # 外卦天干
+            int(Gua.NumToEightGua[str(self.yao_6[0]) + str(self.yao_5[0]) + str(self.yao_4[0])]), 1)
         self.VHS_num1 = najiatg.najiatg(
             int(Gua.NumToEightGua[str(self.vyao_3) + str(self.vyao_2) + str(self.vyao_1)]), 0)
         self.VHS_num2 = najiatg.najiatg(
@@ -150,8 +153,36 @@ class Divination:
         pass
 
 
+class ZiWei():
+    # 紫微斗数
+    def __init__(self):
+        self.label = ""
+
+    def start(self):
+        self.year = input("请输入出生年份：")
+        self.month = input("请输入出生月份：")
+        self.day = input("请输入出生日期：")
+        self.hour = input("请输入出生时：")
+        lunar = cnlunar.Lunar(datetime.datetime(int(self.year), int(self.month),
+                                                int(self.day), int(self.hour)),
+                              godType='8char')  # 常规算法
+        self.year = lunar.year8Char  # 年干支
+        self.month = lunar.month8Char  # 月干支
+        self.day = lunar.day8Char  # 日干支
+        self.twohour = lunar.twohour8Char  # 时干支
+        self.cntime = self.year+" "+self.month+" "+self.day+" "+self.twohour
+
+    def __str__(self):
+        return self.label
+
+
 if __name__ == "__main__":
-    Divination = Divination()
-    Divination.randomStart()
-    Divination.save()
-    print(Divination)
+    # 六爻
+    LiuYao = LiuYao()
+    LiuYao.randomStart()
+    LiuYao.save()
+    print(LiuYao)
+    # 紫微斗数
+    # ZiWei = ZiWei()
+    # ZiWei.start()
+    # print(ZiWei)
